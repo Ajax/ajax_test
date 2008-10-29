@@ -122,7 +122,10 @@ bool ChatHandler::HandleAnnounceCommand(const char* args)
     if(!*args)
         return false;
 
-    sWorld.SendWorldText(LANG_SYSTEMMESSAGE,args);
+    if(m_session)
+        sWorld.SendWorldText(LANG_SYSTEMMESSAGE,m_session->GetPlayerName(),args);
+    else
+        sWorld.SendWorldText(LANG_SYSTEMMESSAGE,"console",args);
     return true;
 }
 
