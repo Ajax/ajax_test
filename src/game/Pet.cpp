@@ -833,6 +833,9 @@ bool Pet::InitStatsForLevel(uint32 petlevel)
                         uint32 fire  = owner->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + SPELL_SCHOOL_FIRE);
                         uint32 shadow = owner->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + SPELL_SCHOOL_SHADOW);
                         uint32 val  = (fire > shadow) ? fire : shadow;
+                        
+                         // learn spells per level
+                         learnWarlockLevelupSpells();
 
                         SetBonusDamage(int32 (val * 0.15f));
                         //bonusAP += val * 0.57;
@@ -1358,6 +1361,23 @@ bool Pet::learnSpell(uint32 spell_id)
 void Pet::learnLevelupSpells()
 {
     PetLevelupSpellSet const *levelupSpells = spellmgr.GetPetLevelupSpellList(GetCreatureInfo()->family);
+    if(!levelupSpells)
+        return;
+
+    uint32 level = getLevel();
+
+    for(PetLevelupSpellSet::const_iterator itr = levelupSpells->begin(); itr != levelupSpells->end(); ++itr)
+    {
+        if(itr->first <= level)
+            learnSpell(itr->second);
+        else
+            unlearnSpell(itr->second);
+    }
+}
+
+void Pet::learnWarlockLevelupSpells()
+{
+    PetLevelupSpellSet const *levelupSpells = spellmgr.GetWarlockPetLevelupSpellList(GetCreatureInfo()->family);
     if(!levelupSpells)
         return;
 
