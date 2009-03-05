@@ -3973,6 +3973,17 @@ void Aura::HandleModMechanicImmunity(bool apply, bool Real)
             m_target->RemoveAurasDueToSpell(26592);
         }
     }
+
+    // Heroic Fury (remove Intercept cooldown)
+    if( apply && GetId() == 60970 && m_target->GetTypeId() == TYPEID_PLAYER )
+    {
+        ((Player*)m_target)->RemoveSpellCooldown(20252);
+
+        WorldPacket data(SMSG_CLEAR_COOLDOWN, (4+8));
+        data << uint32(20252);
+        data << uint64(m_target->GetGUID());
+        ((Player*)m_target)->GetSession()->SendPacket(&data);
+    }
 }
 
 void Aura::HandleAuraModEffectImmunity(bool apply, bool Real)

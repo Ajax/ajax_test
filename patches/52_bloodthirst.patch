@@ -1,0 +1,14 @@
+diff --git a/src/game/SpellEffects.cpp b/src/game/SpellEffects.cpp
+index 9f9505d..9c24e04 100644
+--- a/src/game/SpellEffects.cpp
++++ b/src/game/SpellEffects.cpp
+@@ -1232,7 +1232,8 @@ void Spell::EffectDummy(uint32 i)
+                 // Bloodthirst
+                 case 23881:
+                 {
+-                    m_caster->CastCustomSpell(unitTarget, 23885, &damage, NULL, NULL, true, NULL);
++                    int32 heal = int32(m_caster->GetMaxHealth() / 100);
++                    m_caster->CastCustomSpell(unitTarget, 23885, &heal, NULL, NULL, true, NULL);
+                     return;
+                 }
+             }

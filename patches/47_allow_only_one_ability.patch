@@ -1,0 +1,74 @@
+diff --git a/src/game/Spell.cpp b/src/game/Spell.cpp
+index ab28d2c..a740455 100644
+--- a/src/game/Spell.cpp
++++ b/src/game/Spell.cpp
+@@ -4557,6 +4557,18 @@ uint8 Spell::CheckCasterAuras() const
+         prevented_reason = SPELL_FAILED_SILENCED;
+     else if(unitflag & UNIT_FLAG_PACIFIED && m_spellInfo->PreventionType==SPELL_PREVENTION_TYPE_PACIFY)
+         prevented_reason = SPELL_FAILED_PACIFIED;
++    else if(m_caster->HasAuraType(SPELL_AURA_ALLOW_ONLY_ABILITY))
++    {
++        Unit::AuraList const& casingLimit = m_caster->GetAurasByType(SPELL_AURA_ALLOW_ONLY_ABILITY);
++        for(Unit::AuraList::const_iterator itr = casingLimit.begin(); itr != casingLimit.end(); ++itr)
++        {
++            if(m_spellInfo->SpellFamilyFlags != (uint64)(*itr)->getAuraSpellClassMask())
++            {
++               prevented_reason = SPELL_FAILED_CASTER_AURASTATE;
++               break;
++            }
++        }
++    }
+ 
+     // Attr must make flag drop spell totally immune from all effects
+     if(prevented_reason)
+diff --git a/src/game/SpellAuras.cpp b/src/game/SpellAuras.cpp
+index 06f64c6..4fb4273 100644
+--- a/src/game/SpellAuras.cpp
++++ b/src/game/SpellAuras.cpp
+@@ -313,7 +313,7 @@ pAuraHandler AuraHandler[TOTAL_AURAS]=
+     &Aura::HandleNoImmediateEffect,                         //260 SPELL_AURA_SCREEN_EFFECT (miscvalue = id in ScreenEffect.dbc) not required any code
+     &Aura::HandlePhase,                                     //261 SPELL_AURA_PHASE undetactable invisibility?     implemented in Unit::isVisibleForOrDetect
+     &Aura::HandleNULL,                                      //262
+-    &Aura::HandleNULL,                                      //263 SPELL_AURA_ALLOW_ONLY_ABILITY player can use only abilities set in SpellClassMask
++    &Aura::HandleAllowOnlyAbility,                          //263 SPELL_AURA_ALLOW_ONLY_ABILITY player can use only abilities set in SpellClassMask
+     &Aura::HandleUnused,                                    //264 unused (3.0.8a)
+     &Aura::HandleUnused,                                    //265 unused (3.0.8a)
+     &Aura::HandleUnused,                                    //266 unused (3.0.8a)
+@@ -6697,3 +6697,25 @@ void Aura::HandlePhase(bool apply, bool Real)
+         m_target->SetVisibility(m_target->GetVisibility());
+ }
+ 
++void Aura::HandleAllowOnlyAbility(bool apply, bool Real)
++{
++    if(!Real)
++       return;
++
++    if(apply)
++    {
++       m_target->setAttackTimer(BASE_ATTACK,m_duration);
++       m_target->setAttackTimer(RANGED_ATTACK,m_duration);
++       m_target->setAttackTimer(OFF_ATTACK,m_duration);
++    }
++    else
++    {
++       m_target->resetAttackTimer(BASE_ATTACK);
++       m_target->resetAttackTimer(RANGED_ATTACK);
++       m_target->resetAttackTimer(OFF_ATTACK);
++    }
++
++    m_target->UpdateDamagePhysical(BASE_ATTACK);
++    m_target->UpdateDamagePhysical(RANGED_ATTACK);
++    m_target->UpdateDamagePhysical(OFF_ATTACK);
++}
+diff --git a/src/game/SpellAuras.h b/src/game/SpellAuras.h
+index a9877d5..46f6174 100644
+--- a/src/game/SpellAuras.h
++++ b/src/game/SpellAuras.h
+@@ -209,6 +209,7 @@ class MANGOS_DLL_SPEC Aura
+         void HandleAuraIncreaseBaseHealthPercent(bool Apply, bool Real);
+         void HandleNoReagentUseAura(bool Apply, bool Real);
+         void HandlePhase(bool Apply, bool Real);
++        void HandleAllowOnlyAbility(bool Apply, bool Real);
+ 
+         virtual ~Aura();
+ 

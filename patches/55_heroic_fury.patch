@@ -1,0 +1,22 @@
+diff --git a/src/game/SpellAuras.cpp b/src/game/SpellAuras.cpp
+index 55d80d7..d4053a6 100644
+--- a/src/game/SpellAuras.cpp
++++ b/src/game/SpellAuras.cpp
+@@ -3971,6 +3971,17 @@ void Aura::HandleModMechanicImmunity(bool apply, bool Real)
+             m_target->RemoveAurasDueToSpell(26592);
+         }
+     }
++
++    // Heroic Fury (remove Intercept cooldown)
++    if( apply && GetId() == 60970 && m_target->GetTypeId() == TYPEID_PLAYER )
++    {
++        ((Player*)m_target)->RemoveSpellCooldown(20252);
++
++        WorldPacket data(SMSG_CLEAR_COOLDOWN, (4+8));
++        data << uint32(20252);
++        data << uint64(m_target->GetGUID());
++        ((Player*)m_target)->GetSession()->SendPacket(&data);
++    }
+ }
+ 
+ void Aura::HandleAuraModEffectImmunity(bool apply, bool Real)

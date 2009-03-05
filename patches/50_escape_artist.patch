@@ -1,0 +1,20 @@
+diff --git a/src/game/SpellEffects.cpp b/src/game/SpellEffects.cpp
+index 9f9505d..78cd6fd 100644
+--- a/src/game/SpellEffects.cpp
++++ b/src/game/SpellEffects.cpp
+@@ -4758,6 +4758,15 @@ void Spell::EffectScriptEffect(uint32 effIndex)
+                     unitTarget->HandleEmoteCommand(EMOTE_STATE_DANCE);
+                     break;
+                 }
++                // Escape artist
++                case 20589:
++                {
++                    if(!m_caster)
++                        return;
++                    m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_ROOT);
++                    m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_DECREASE_SPEED);
++                    break;
++                }
+                 // Mirren's Drinking Hat
+                 case 29830:
+                 {
