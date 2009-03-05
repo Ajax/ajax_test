@@ -824,14 +824,16 @@ enum Targets
     TARGET_AREAEFFECT_PARTY            = 37,
     TARGET_SCRIPT                      = 38,
     TARGET_SELF_FISHING                = 39,
-    TARGET_TOTEM_EARTH                 = 41,
-    TARGET_TOTEM_WATER                 = 42,
-    TARGET_TOTEM_AIR                   = 43,
-    TARGET_TOTEM_FIRE                  = 44,
+    TARGET_LOCATION_FRONT_LEFT         = 41,
+    TARGET_LOCATION_BACK_LEFT          = 42,
+    TARGET_LOCATION_BACK_RIGHT         = 43,
+    TARGET_LOCATION_FRONT_RIGHT        = 44,
     TARGET_CHAIN_HEAL                  = 45,
     TARGET_SCRIPT_COORDINATES          = 46,
-    TARGET_DYNAMIC_OBJECT              = 47,
-    TARGET_SUMMON                      = 48,
+    TARGET_LOCATION_FRONT              = 47,
+    TARGET_LOCATION_BACK               = 48,
+    TARGET_LOCATION_LEFT               = 49,
+    TARGET_LOCATION_RIGHT              = 50,
     TARGET_AREAEFFECT_CUSTOM_2         = 52,
     TARGET_CURRENT_ENEMY_COORDINATES   = 53,                // set unit coordinates as dest, only 16 target B imlemented
     TARGET_ALL_RAID_AROUND_CASTER      = 56,
@@ -839,9 +841,13 @@ enum Targets
     TARGET_AREAEFFECT_PARTY_AND_CLASS  = 61,
     TARGET_DUELVSPLAYER_COORDINATES    = 63,
     TARGET_BEHIND_VICTIM               = 65,                // uses in teleport behind spells
+	TARGET_LOCATION_RANDOM_AROUND_CASTER    = 72,
+    TARGET_LOCATION_RADIUS_AROUND_CASTER    = 73,
+    TARGET_LOCATION_RANDOM_IN_AREA     = 74,
     TARGET_DYNAMIC_OBJECT_COORDINATES  = 76,
     TARGET_SINGLE_ENEMY                = 77,
-    TARGET_SELF2                       = 87,
+	TARGET_LOCATION_AROUND_DEST        = 86,
+    TARGET_LOCATION_AT_DEST            = 87,
     TARGET_NONCOMBAT_PET               = 90,
 };
 
@@ -2085,6 +2091,7 @@ enum SummonType
     SUMMON_TYPE_UNKNOWN5    = 409,
     SUMMON_TYPE_UNKNOWN2    = 427,
     SUMMON_TYPE_POSESSED2   = 428,
+	SUMMON_TYPE_WILD2       = 429,
     SUMMON_TYPE_FORCE_OF_NATURE = 669,
     SUMMON_TYPE_GUARDIAN2   = 1161
 };

@@ -1293,16 +1293,101 @@ void Spell::SetTargetMap(uint32 i,uint32 cur,std::list<Unit*> &TagUnitMap)
     }
     switch(cur)
     {
-        case TARGET_TOTEM_EARTH:
-        case TARGET_TOTEM_WATER:
-        case TARGET_TOTEM_AIR:
-        case TARGET_TOTEM_FIRE:
+        case TARGET_LOCATION_FRONT_LEFT:
+        case TARGET_LOCATION_BACK_LEFT:
+        case TARGET_LOCATION_BACK_RIGHT:
+        case TARGET_LOCATION_FRONT_RIGHT:
+        case TARGET_LOCATION_FRONT:
+        case TARGET_LOCATION_BACK:
+        case TARGET_LOCATION_LEFT:
+        case TARGET_LOCATION_RIGHT:
+        case TARGET_LOCATION_RANDOM_AROUND_CASTER:
+        case TARGET_LOCATION_RADIUS_AROUND_CASTER:
+        {
+            float x, y, z, angle, dist;
+
+            if (m_spellInfo->EffectRadiusIndex[i])
+                dist = GetSpellRadius(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[i]));
+            else
+                dist = 3.0f;
+            if (cur == TARGET_LOCATION_RANDOM_AROUND_CASTER)
+                dist *= rand_norm(); // This case we need to consider caster size
+            else
+                dist -= m_caster->GetObjectSize(); // Size is calculated in GetNearPoint(), but we do not need it 
+
+            switch(cur)
+            {
+                case TARGET_LOCATION_FRONT_LEFT:
+                    angle = -M_PI/4;
+                    break;
+                case TARGET_LOCATION_BACK_LEFT:
+                    angle = -3*M_PI/4;
+                    break;
+                case TARGET_LOCATION_BACK_RIGHT:
+                    angle = 3*M_PI/4;
+                    break;
+                case TARGET_LOCATION_FRONT_RIGHT:
+                    angle = M_PI/4;
+                    break;
+                case TARGET_LOCATION_FRONT:
+                    angle = 0.0f;
+                    break;
+                case TARGET_LOCATION_BACK:
+                    angle = M_PI;
+                    break;
+                case TARGET_LOCATION_LEFT:
+                    angle = -M_PI/2;
+                    break;
+                case TARGET_LOCATION_RIGHT:
+                    angle = M_PI/2;
+                    break;
+                default:
+                    angle = rand_norm()*2*M_PI;
+                    break;
+            }
+
+            m_caster->GetClosePoint(x, y, z, 0, dist, angle);
+            m_targets.setDestination(x, y, z);
+            if (m_targets.getUnitTarget())
+                TagUnitMap.push_back(m_targets.getUnitTarget());
+            else
+                TagUnitMap.push_back(m_caster); 
+        }break;
+        case TARGET_LOCATION_RANDOM_IN_AREA:
+        case TARGET_LOCATION_AROUND_DEST:
+        {
+            float x, y, z, dist, px, py, pz;
+            dist = GetSpellRadius(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[i]));
+            if (m_targets.m_targetMask & TARGET_FLAG_DEST_LOCATION)
+            {
+                x = m_targets.m_destX;
+                y = m_targets.m_destY;
+                z = m_targets.m_destZ;
+            }
+            else if (m_targets.getUnitTarget()) // Do not know if possible
+                m_targets.getUnitTarget()->GetPosition(x, y, z);
+            else
+                m_caster->GetPosition(x, y, z);
+
+            m_caster->GetRandomPoint(x, y, z, dist, px, py, pz);
+            m_targets.setDestination(px, py, pz);
+            if (m_targets.getUnitTarget())
+                TagUnitMap.push_back(m_targets.getUnitTarget());
+            else
+                TagUnitMap.push_back(m_caster);
+        }break;
+        case TARGET_LOCATION_AT_DEST:
+        {
+            if (m_targets.getUnitTarget())
+                TagUnitMap.push_back(m_targets.getUnitTarget());
+            else
+                TagUnitMap.push_back(m_caster);
+        }break;
+
         case TARGET_SELF:
-        case TARGET_SELF2:
         case TARGET_DYNAMIC_OBJECT:
         case TARGET_AREAEFFECT_CUSTOM:
         case TARGET_AREAEFFECT_CUSTOM_2:
-        case TARGET_SUMMON:
         {
             TagUnitMap.push_back(m_caster);
             break;
