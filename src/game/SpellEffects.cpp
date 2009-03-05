@@ -4781,6 +4781,15 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                     unitTarget->HandleEmoteCommand(EMOTE_STATE_DANCE);
                     break;
                 }
+                // Escape artist
+                case 20589:
+                {
+                    if(!m_caster)
+                        return;
+                    m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_ROOT);
+                    m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_DECREASE_SPEED);
+                    break;
+                }
                 // Mirren's Drinking Hat
                 case 29830:
                 {
