@@ -1974,6 +1974,7 @@ class MANGOS_DLL_SPEC Player : public Unit
 
         bool GetBGAccessByLevel(BattleGroundTypeId bgTypeId) const;
         bool isAllowUseBattleGroundObject();
+		bool isTotalImmunity();
 
         /*********************************************************/
         /***                    REST SYSTEM                    ***/
