@@ -6308,6 +6308,19 @@ void Player::UpdateArea(uint32 newArea)
     // so apply them accordingly
     m_areaUpdateId    = newArea;
 
+	//EK-Change Porte Spieler zurück zur Psy-City, sollten sie das Gebiet verlassen!
+	uint32 map = GetMapId();
+
+	if( !isGameMaster() && ( map == 0 && (newArea != 2266 ) ) ) // This rule doesn't affect GM
+	{
+		if(!GetTransport()) // Not in transport
+		{
+			ChatHandler(this).PSendSysMessage(LANG_GER_AREACHEAT); //Inform player
+			RemoveSpellCooldown(7355); // remove hearthstone cooldown, just incase it is on cooldown
+			CastSpell(this, 7355, true); // cast hearthstone (triggered, so it is instant)
+		}
+	}
+
     AreaTableEntry const* area = GetAreaEntryByAreaID(newArea);
 
     if(area && (area->flags & AREA_FLAG_ARENA))
