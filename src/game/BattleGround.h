@@ -147,6 +147,7 @@ enum BattleGroundQueueTypeId
     BATTLEGROUND_QUEUE_5v5      = 8
 };
 #define MAX_BATTLEGROUND_QUEUE_TYPES 9
+#define MAX_BATTLEGROUND_NONARENA_QUEUE_TYPES 5
 
 enum BGQueueIdBasedOnLevel                        // queue_id for level ranges
 {
@@ -273,6 +274,7 @@ class BattleGround
         BattleGroundTypeId GetTypeID() const { return m_TypeID; }
         BGQueueIdBasedOnLevel GetQueueId() const { return m_QueueId; }
         uint32 GetInstanceID() const        { return m_InstanceID; }
+		uint32 GetClientInstanceID() const  { return m_ClientInstanceID; }
         BattleGroundStatus GetStatus() const { return m_Status; }
         uint32 GetStartTime() const         { return m_StartTime; }
         uint32 GetEndTime() const           { return m_EndTime; }
@@ -302,6 +304,7 @@ class BattleGround
             this->SetLevelRange((ID + 1) * 10 + diff, (ID + 2) * 10 - ((diff + 1) % 2));
         }
         void SetInstanceID(uint32 InstanceID) { m_InstanceID = InstanceID; }
+		void SetClientInstanceID(uint32 InstanceID) { m_ClientInstanceID = InstanceID; }
         void SetStatus(BattleGroundStatus Status) { m_Status = Status; }
         void SetStartTime(uint32 Time)      { m_StartTime = Time; }
         void SetEndTime(uint32 Time)        { m_EndTime = Time; }
@@ -489,6 +492,7 @@ class BattleGround
         /* Battleground */
         BattleGroundTypeId m_TypeID;
         uint32 m_InstanceID;                                //BattleGround Instance's GUID!
+		uint32 m_ClientInstanceID;                          //the instance-id which is sent to the client and without any other internal use
         BattleGroundStatus m_Status;
         uint32 m_StartTime;
         uint32 m_EndTime;
