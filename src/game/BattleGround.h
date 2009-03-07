@@ -520,8 +520,8 @@ class BattleGround
         /* Battleground */
         BattleGroundTypeId m_TypeID;
         uint32 m_InstanceID;                                //BattleGround Instance's GUID!
-		uint32 m_ClientInstanceID;                          //the instance-id which is sent to the client and without any other internal use
         BattleGroundStatus m_Status;
+		uint32 m_ClientInstanceID;                          //the instance-id which is sent to the client and without any other internal use
         uint32 m_StartTime;
         uint32 m_EndTime;
         uint32 m_LastResurrectTime;
