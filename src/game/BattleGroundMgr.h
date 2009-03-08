@@ -201,7 +201,7 @@ class BattleGroundMgr
 		uint32 CreateClientVisibleInstanceId(BattleGroundTypeId bgTypeId, BGQueueIdBasedOnLevel queue_id);
 
         void CreateInitialBattleGrounds();
-        void DeleteAlllBattleGrounds();
+        void DeleteAllBattleGrounds();
 
         void SendToBattleGround(Player *pl, uint32 InstanceID, BattleGroundTypeId bgTypeId);
 
