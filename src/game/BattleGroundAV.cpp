@@ -20,8 +20,6 @@
 #include "Player.h"
 #include "BattleGround.h"
 #include "BattleGroundAV.h"
-#include "Creature.h"
-#include "MapManager.h"
 #include "Language.h"
 
 BattleGroundAV::BattleGroundAV()
