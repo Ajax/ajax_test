@@ -1487,9 +1487,9 @@ BattleGround * BattleGroundMgr::GetBattleGroundTemplate(BattleGroundTypeId bgTyp
     //map is sorted and we can be sure that lowest instance id has only BG template
     return m_BattleGrounds[bgTypeId].empty() ? NULL : m_BattleGrounds[bgTypeId].begin()->second;
 }
-uint32 BattleGroundMgr::CreateClientVisibleInstanceId(BattleGroundQueueTypeId bgQueueTypeId, BGQueueIdBasedOnLevel queue_id)
+uint32 BattleGroundMgr::CreateClientVisibleInstanceId(BattleGroundTypeId bgTypeId, BGQueueIdBasedOnLevel queue_id)
 {
-	if(bgQueueTypeId>MAX_BATTLEGROUND_NONARENA_QUEUE_TYPES)
+	if(IsArenaType(bgTypeId))
 		return 0;//arenas don't have client-instanceids
 
 	// we create here an instanceid, which is just for
@@ -1499,13 +1499,13 @@ uint32 BattleGroundMgr::CreateClientVisibleInstanceId(BattleGroundQueueTypeId bg
 	// the following works, because std::set is default ordered with "<"
 
 	uint32 lastId = 0;
-	for(std::set<uint32>::iterator itr = m_ClientBattleGroundIds[bgQueueTypeId][queue_id].begin(); itr != m_ClientBattleGroundIds[bgQueueTypeId][queue_id].end();)
+	for(std::set<uint32>::iterator itr = m_ClientBattleGroundIds[bgTypeId][queue_id].begin(); itr != m_ClientBattleGroundIds[bgTypeId][queue_id].end();)
 	{
 		if(lastId+1!=*itr) //if there is a gap between the ids, we will break..
 			break;
 		lastId=*itr;
 	}
-	m_ClientBattleGroundIds[bgQueueTypeId][queue_id].insert(lastId+1);
+	m_ClientBattleGroundIds[bgTypeId][queue_id].insert(lastId+1);
 	return lastId+1;
 }
 // create a new battleground that will really be used to play
@@ -1577,7 +1577,7 @@ BattleGround * BattleGroundMgr::CreateNewBattleGround(BattleGroundTypeId bgTypeI
 
     // generate a new instance id
     bg->SetInstanceID(MapManager::Instance().GenerateInstanceId()); // set instance id
-	bg->SetClientInstanceID(CreateClientVisibleInstanceId(BGQueueTypeId(bgTypeId,arenaType), queue_id));
+	bg->SetClientInstanceID(CreateClientVisibleInstanceId(bgTypeId, queue_id));
 
     // reset the new bg (set status to status_wait_queue from status_none)
     bg->Reset();
@@ -1846,11 +1846,11 @@ void BattleGroundMgr::BuildBattleGroundListPacket(WorldPacket *data, const uint6
     }
     else                                                    // battleground
     {
-        *data << int8(-1);                               // unk
+        *data << uint8(0x00);                               // unk
 
         size_t count_pos = data->wpos();
         uint32 count = 0;
-        *data << int32(-1);                              // number of bg instances
+        *data << uint32(0x00);                              // number of bg instances
 
         uint32 queue_id = plr->GetBattleGroundQueueIdFromLevel(bgTypeId);
 		for(std::set<uint32>::iterator itr = m_ClientBattleGroundIds[bgTypeId][queue_id].begin(); itr != m_ClientBattleGroundIds[bgTypeId][queue_id].end();++itr)

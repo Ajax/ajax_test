@@ -198,7 +198,7 @@ class BattleGroundMgr
 
         void AddBattleGround(uint32 InstanceID, BattleGroundTypeId bgTypeId, BattleGround* BG) { m_BattleGrounds[bgTypeId][InstanceID] = BG; };
         void RemoveBattleGround(uint32 instanceID, BattleGroundTypeId bgTypeId) { m_BattleGrounds[bgTypeId].erase(instanceID); }
-		uint32 CreateClientVisibleInstanceId(BattleGroundQueueTypeId bgQueueTypeId, BGQueueIdBasedOnLevel queue_id);
+		uint32 CreateClientVisibleInstanceId(BattleGroundTypeId bgTypeId, BGQueueIdBasedOnLevel queue_id);
 
         void CreateInitialBattleGrounds();
         void DeleteAlllBattleGrounds();
@@ -242,7 +242,7 @@ class BattleGroundMgr
 
         /* Battlegrounds */
         BattleGroundSet m_BattleGrounds[MAX_BATTLEGROUND_TYPE_ID];
-		std::set<uint32> m_ClientBattleGroundIds[MAX_BATTLEGROUND_NONARENA_QUEUE_TYPES][MAX_BATTLEGROUND_QUEUES]; //the instanceids just visible for the client
+		std::set<uint32> m_ClientBattleGroundIds[MAX_BATTLEGROUND_TYPE_ID][MAX_BATTLEGROUND_QUEUES]; //the instanceids just visible for the client
         uint32 m_NextRatingDiscardUpdate;
         uint64 m_NextAutoDistributionTime;
         uint32 m_AutoDistributionTimeChecker;

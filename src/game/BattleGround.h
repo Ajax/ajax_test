@@ -152,7 +152,6 @@ enum BattleGroundQueueTypeId
     BATTLEGROUND_QUEUE_5v5      = 8
 };
 #define MAX_BATTLEGROUND_QUEUE_TYPES 9
-#define MAX_BATTLEGROUND_NONARENA_QUEUE_TYPES 5
 
 enum BGQueueIdBasedOnLevel                        // queue_id for level ranges
 {
